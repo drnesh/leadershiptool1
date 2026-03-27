@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LeaderDNA — Know Yourself. Lead Better.</title>
+  <meta name="description" content="A science-backed leadership diagnostic platform built on the Big Five personality framework. Discover your leadership archetype and get matched to tailored development programs."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink:       #141210;
+      --paper:     #F8F3EA;
+      --gold:      #B8923A;
+      --gold-lt:   #D4AE62;
+      --mist:      #E8E2D8;
+      --mid:       rgba(20,18,16,0.5);
+      --faint:     rgba(20,18,16,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      opacity: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 3rem;
+      background: rgba(248,243,234,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--faint);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--gold); font-style: italic; }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      background: var(--ink) !important;
+      color: var(--paper) !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2px;
+    }
+
+    .nav-cta:hover { background: #2a2520 !important; color: var(--paper) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-left { animation: fadeUp 0.9s ease both; }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px; height: 1px;
+      background: var(--gold);
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-body {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--mid);
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0.9rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover { background: #2a2520; transform: translateY(-1px); }
+
+    .btn-ghost {
+      color: var(--mid);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .btn-ghost:hover { color: var(--ink); }
+
+    .hero-right {
+      animation: fadeUp 0.9s 0.2s ease both;
+      position: relative;
+    }
+
+    .hero-card {
+      background: white;
+      border: 1px solid var(--faint);
+      border-radius: 4px;
+      padding: 2.5rem;
+      box-shadow: 0 24px 64px rgba(20,18,16,0.08), 0 4px 16px rgba(20,18,16,0.04);
+      position: relative;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 2rem; right: 2rem; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+      border-radius: 0 0 2px 2px;
+    }
+
+    .ocean-bars { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .ocean-row { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .ocean-row-top {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .ocean-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .ocean-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--mid);
+    }
+
+    .bar-track {
+      height: 5px;
+      background: var(--mist);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      animation: barGrow 1.2s cubic-bezier(0.4,0,0.2,1) both;
+    }
+
+    @keyframes barGrow {
+      from { width: 0 !important; }
+      to {}
+    }
+
+    .hero-card-foot {
+      margin-top: 1.5rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--faint);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .archetype-pill {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .archetype-pill-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    /* ── SECTION SHARED ── */
+    section {
+      position: relative; z-index: 1;
+      padding: 6rem 3rem;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: var(--gold);
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.2rem;
+    }
+
+    h2 em { font-style: italic; color: var(--gold); }
+
+    .section-body {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: var(--mid);
+      max-width: 560px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { background: var(--ink); }
+    .how-section h2, .how-section .section-body { color: rgba(248,243,234,0.9); }
+    .how-section .section-label { color: var(--gold-lt); }
+    .how-section .section-label::before { background: var(--gold-lt); }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(248,243,234,0.08);
+      border: 1px solid rgba(248,243,234,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 3rem;
+    }
+
+    .step {
+      background: var(--ink);
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .step:hover { background: #1e1b17; }
+
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: rgba(248,243,234,0.08);
+      line-height: 1;
+      margin-bottom: 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .step h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: rgba(248,243,234,0.9);
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+
+    .step p {
+      font-size: 0.85rem;
+      line-height: 1.75;
+      color: rgba(248,243,234,0.45);
+    }
+
+    .step-icon {
+      position: absolute;
+      top: 2rem; right: 2rem;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+
+    /* ── OCEAN FACTORS ── */
+    .factors-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .factor-card {
+      background: white;
+      border: 1px solid var(--faint);
+      border-radius: 4px;
+      padding: 1.8rem 1.3rem;
+      text-align: center;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(20,18,16,0.04);
+    }
+
+    .factor-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(20,18,16,0.08);
+    }
+
+    .factor-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+
+    .factor-initial {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .factor-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    /* ── TOOLS ── */
+    .tools-section { background: white; }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .tool-card {
+      border: 1px solid var(--faint);
+      border-radius: 4px;
+      padding: 2.5rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .tool-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(20,18,16,0.08); }
+    .tool-card:hover::after { transform: scaleX(1); }
+
+    .tool-card.featured { background: var(--ink); }
+    .tool-card.featured .tool-tag { color: var(--gold-lt); border-color: rgba(212,174,98,0.3); }
+    .tool-card.featured h3 { color: rgba(248,243,234,0.95); }
+    .tool-card.featured p { color: rgba(248,243,234,0.45); }
+    .tool-card.featured .tool-arrow { color: var(--gold-lt); }
+    .tool-card.featured .tool-meta span { background: rgba(248,243,234,0.06); color: rgba(248,243,234,0.4); }
+
+    .tool-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(184,146,58,0.3);
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: 1.2rem;
+    }
+
+    .tool-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.7rem;
+      color: var(--ink);
+    }
+
+    .tool-card p {
+      font-size: 0.86rem;
+      line-height: 1.75;
+      color: var(--mid);
+      margin-bottom: 1.5rem;
+    }
+
+    .tool-meta {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .tool-meta span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+      background: var(--mist);
+      color: var(--mid);
+    }
+
+    .tool-arrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .tool-coming {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* ── PROGRAMS PREVIEW ── */
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .program-card {
+      border: 1px solid var(--faint);
+      border-radius: 4px;
+      padding: 2rem 1.5rem;
+      background: white;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(20,18,16,0.03);
+    }
+
+    .program-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(20,18,16,0.07);
+    }
+
+    .program-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      margin-bottom: 1.2rem;
+    }
+
+    .program-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+
+    .program-card p {
+      font-size: 0.8rem;
+      line-height: 1.7;
+      color: var(--mid);
+      margin-bottom: 1rem;
+    }
+
+    .program-format {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section { background: var(--ink); }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .testimonial {
+      padding: 2rem;
+      border: 1px solid rgba(248,243,234,0.08);
+      border-radius: 4px;
+      transition: border-color 0.2s;
+    }
+
+    .testimonial:hover { border-color: rgba(184,146,58,0.3); }
+
+    .testimonial-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: rgba(248,243,234,0.8);
+      margin-bottom: 1.5rem;
+    }
+
+    .testimonial-author {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(248,243,234,0.35);
+    }
+
+    .testimonial-author strong {
+      display: block;
+      color: var(--gold-lt);
+      margin-bottom: 0.2rem;
+    }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      text-align: center;
+      padding: 8rem 3rem;
+    }
+
+    .cta-section h2 { margin: 0 auto 1.2rem; }
+    .cta-section .section-body { margin: 0 auto 2.5rem; text-align: center; }
+    .cta-section .section-label { justify-content: center; }
+    .cta-section .section-label::before { display: none; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--faint);
+      padding: 2.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .footer-logo span { color: var(--gold); font-style: italic; }
+
+    .footer-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--ink); }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: rgba(20,18,16,0.25);
+    }
+
+    /* ── DIVIDER ── */
+    .ruled {
+      border: none;
+      border-top: 1px solid var(--faint);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+      .factors-grid { grid-template-columns: repeat(3, 1fr); }
+      .programs-grid { grid-template-columns: 1fr 1fr; }
+      .tools-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+    }
+
+    @media (max-width: 580px) {
+      .factors-grid { grid-template-columns: 1fr 1fr; }
+      .programs-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Leader<span>DNA</span></a>
+    <ul class="nav-links">
+      <li><a href="#how">How it Works</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="tool.html" class="nav-cta">Take the Assessment</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero" style="position:relative;z-index:1;">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Big Five Leadership Platform</div>
+      <h1>
+        Know yourself.<br/>
+        Lead with<br/>
+        <em>intention.</em>
+      </h1>
+      <p class="hero-body">
+        A research-backed diagnostic built on the most validated personality framework in psychology. Discover your leadership archetype, surface your blind spots, and get matched to programs designed for exactly who you are.
+      </p>
+      <div class="hero-actions">
+        <a href="tool.html" class="btn-primary">Take the Free Assessment →</a>
+        <a href="#how" class="btn-ghost">See how it works ↓</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card">
+        <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid);margin-bottom:1.2rem;">Sample Profile · Strategic Pioneer</div>
+        <div class="ocean-bars">
+          <div class="ocean-row">
+            <div class="ocean-row-top">
+              <span class="ocean-label" style="color:#4A90A4;">◈ Openness</span>
+              <span class="ocean-pct">82%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:82%;background:#4A90A4;animation-delay:0.1s;"></div></div>
+          </div>
+          <div class="ocean-row">
+            <div class="ocean-row-top">
+              <span class="ocean-label" style="color:#C9873A;">◆ Conscientiousness</span>
+              <span class="ocean-pct">76%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:76%;background:#C9873A;animation-delay:0.2s;"></div></div>
+          </div>
+          <div class="ocean-row">
+            <div class="ocean-row-top">
+              <span class="ocean-label" style="color:#C05A3A;">◎ Extraversion</span>
+              <span class="ocean-pct">41%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:41%;background:#C05A3A;animation-delay:0.3s;"></div></div>
+          </div>
+          <div class="ocean-row">
+            <div class="ocean-row-top">
+              <span class="ocean-label" style="color:#3A8A68;">◉ Agreeableness</span>
+              <span class="ocean-pct">58%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:58%;background:#3A8A68;animation-delay:0.4s;"></div></div>
+          </div>
+          <div class="ocean-row">
+            <div class="ocean-row-top">
+              <span class="ocean-label" style="color:#7A5CBF;">◑ Emotional Stability</span>
+              <span class="ocean-pct">69%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:69%;background:#7A5CBF;animation-delay:0.5s;"></div></div>
+          </div>
+        </div>
+        <div class="hero-card-foot">
+          <div>
+            <div class="archetype-pill-label">Archetype</div>
+            <div class="archetype-pill">The Strategic Pioneer</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="archetype-pill-label">Recommended</div>
+            <div style="font-size:0.78rem;font-weight:500;color:var(--gold);">Visible Leadership</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how">
+    <div class="section-inner">
+      <div class="section-label">How It Works</div>
+      <h2>From <em>self-awareness</em><br/>to targeted action.</h2>
+      <p class="section-body" style="color:rgba(248,243,234,0.5);">Three steps from assessment to development — all inside a single seamless experience.</p>
+      <div class="steps-grid">
+        <div class="step reveal">
+          <div class="step-icon">◈</div>
+          <div class="step-num">01</div>
+          <h3>Take the Assessment</h3>
+          <p>25 questions across the Big Five factors — Openness, Conscientiousness, Extraversion, Agreeableness, and Emotional Stability — adapted specifically for leadership contexts.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:0.1s">
+          <div class="step-icon">◎</div>
+          <div class="step-num">02</div>
+          <h3>Receive Your Profile</h3>
+          <p>Get your OCEAN scores, your leadership archetype, a pentagon radar chart, gap analysis, and personalized coaching prompts — all in one rich results experience.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:0.2s">
+          <div class="step-icon">◆</div>
+          <div class="step-num">03</div>
+          <h3>Start Your Program</h3>
+          <p>Your lowest-scoring factors match you to the right development program — from cohort courses to 1-on-1 coaching — designed around your specific leadership wiring.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OCEAN FACTORS -->
+  <section id="framework">
+    <div class="section-inner">
+      <div class="section-label reveal">The Framework</div>
+      <h2 class="reveal">Built on the <em>Big Five.</em><br/>Translated for leadership.</h2>
+      <p class="section-body reveal">The OCEAN model is the most empirically validated personality framework in psychology — used in academic research, organizational psychology, and executive assessment worldwide.</p>
+      <div class="factors-grid">
+        <div class="factor-card reveal">
+          <span class="factor-icon" style="color:#4A90A4;">◈</span>
+          <span class="factor-initial" style="color:#4A90A4;">O</span>
+          <span class="factor-name">Openness</span>
+          <p style="font-size:0.78rem;color:var(--mid);line-height:1.6;margin-top:0.5rem;">Vision, curiosity, tolerance for ambiguity</p>
+        </div>
+        <div class="factor-card reveal" style="transition-delay:0.1s">
+          <span class="factor-icon" style="color:#C9873A;">◆</span>
+          <span class="factor-initial" style="color:#C9873A;">C</span>
+          <span class="factor-name">Conscientiousness</span>
+          <p style="font-size:0.78rem;color:var(--mid);line-height:1.6;margin-top:0.5rem;">Discipline, accountability, execution</p>
+        </div>
+        <div class="factor-card reveal" style="transition-delay:0.15s">
+          <span class="factor-icon" style="color:#C05A3A;">◎</span>
+          <span class="factor-initial" style="color:#C05A3A;">E</span>
+          <span class="factor-name">Extraversion</span>
+          <p style="font-size:0.78rem;color:var(--mid);line-height:1.6;margin-top:0.5rem;">Presence, influence, communication</p>
+        </div>
+        <div class="factor-card reveal" style="transition-delay:0.2s">
+          <span class="factor-icon" style="color:#3A8A68;">◉</span>
+          <span class="factor-initial" style="color:#3A8A68;">A</span>
+          <span class="factor-name">Agreeableness</span>
+          <p style="font-size:0.78rem;color:var(--mid);line-height:1.6;margin-top:0.5rem;">Empathy, trust, psychological safety</p>
+        </div>
+        <div class="factor-card reveal" style="transition-delay:0.25s">
+          <span class="factor-icon" style="color:#7A5CBF;">◑</span>
+          <span class="factor-initial" style="color:#7A5CBF;">N</span>
+          <span class="factor-name">Emotional Stability</span>
+          <p style="font-size:0.78rem;color:var(--mid);line-height:1.6;margin-top:0.5rem;">Composure, resilience, regulation</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ruled" style="position:relative;z-index:1;max-width:1100px;margin:0 auto;"/>
+
+  <!-- TOOLS -->
+  <section class="tools-section" id="tools">
+    <div class="section-inner">
+      <div class="section-label reveal">Tools</div>
+      <h2 class="reveal">Diagnostics for<br/><em>every leader.</em></h2>
+      <p class="section-body reveal">Start with the flagship assessment, then explore additional tools as your platform grows.</p>
+      <div class="tools-grid">
+        <a href="tool.html" class="tool-card featured reveal">
+          <div class="tool-tag">★ Live Now</div>
+          <h3>Big Five Leadership Assessment</h3>
+          <p>25 questions. 5 OCEAN factors. 8 leadership archetypes. Full gap analysis, OCEAN radar chart, coaching prompts, and matched program recommendations — all in one experience.</p>
+          <div class="tool-meta">
+            <span>25 Questions</span>
+            <span>~10 Minutes</span>
+            <span>8 Archetypes</span>
+            <span>5 Programs</span>
+          </div>
+          <div class="tool-arrow">Take the Assessment →</div>
+        </a>
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          <div class="tool-card tool-coming reveal">
+            <div class="tool-tag">Coming Soon</div>
+            <h3>360° Feedback Diagnostic</h3>
+            <p>Invite your team, peers, and manager to rate you across the same OCEAN dimensions. Compare self-perception to others' experience.</p>
+            <div class="tool-meta"><span>Multi-Rater</span><span>Team Version</span></div>
+            <div class="tool-arrow">Notify Me →</div>
+          </div>
+          <div class="tool-card tool-coming reveal" style="transition-delay:0.1s">
+            <div class="tool-tag">Coming Soon</div>
+            <h3>Team Culture Mapper</h3>
+            <p>Map the collective OCEAN profile of your entire team. Identify collective blind spots and design team development that fits your culture.</p>
+            <div class="tool-meta"><span>Team Edition</span><span>Dashboard Included</span></div>
+            <div class="tool-arrow">Notify Me →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section id="programs">
+    <div class="section-inner">
+      <div class="section-label reveal">Development Programs</div>
+      <h2 class="reveal">Matched to <em>your gaps.</em><br/>Not generic courses.</h2>
+      <p class="section-body reveal">Every program is matched to a specific OCEAN factor gap. When you complete the assessment, you're directed to the program that will move your leadership the most — not the most popular one.</p>
+      <div class="programs-grid">
+        <div class="program-card reveal">
+          <div class="program-dot" style="background:#4A90A4;"></div>
+          <h3>Leading Through Change</h3>
+          <p>For leaders with low Openness who need to build adaptability without losing their grounded, reliable presence.</p>
+          <div class="program-format">8 Weeks · Cohort · Live + Async</div>
+        </div>
+        <div class="program-card reveal" style="transition-delay:0.08s">
+          <div class="program-dot" style="background:#C9873A;"></div>
+          <h3>From Intention to Impact</h3>
+          <p>For high-vision leaders whose follow-through and accountability systems aren't matching their ambition.</p>
+          <div class="program-format">6 Weeks · Self-Paced + Workshops</div>
+        </div>
+        <div class="program-card reveal" style="transition-delay:0.12s">
+          <div class="program-dot" style="background:#C05A3A;"></div>
+          <h3>Visible Leadership</h3>
+          <p>For deep, reflective leaders who are consistently underestimated and need to claim their authority on their own terms.</p>
+          <div class="program-format">10 Weeks · Cohort · Executive Track</div>
+        </div>
+        <div class="program-card reveal" style="transition-delay:0.16s">
+          <div class="program-dot" style="background:#3A8A68;"></div>
+          <h3>Courageous Accountability</h3>
+          <p>For leaders whose teams either fear performance conversations or never have them — building the third path.</p>
+          <div class="program-format">8 Weeks · Cohort · Live Sessions</div>
+        </div>
+        <div class="program-card reveal" style="transition-delay:0.2s">
+          <div class="program-dot" style="background:#7A5CBF;"></div>
+          <h3>Leading Under Pressure</h3>
+          <p>For leaders whose stress is visible to their team — building the regulation and recovery systems that sustain performance.</p>
+          <div class="program-format">6 Weeks · Self-Paced + Coaching</div>
+        </div>
+        <div class="program-card reveal" style="transition-delay:0.24s;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:var(--ink);">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;font-style:italic;color:rgba(248,243,234,0.5);margin-bottom:0.8rem;">Find yours.</div>
+          <a href="tool.html" class="btn-primary" style="font-size:0.75rem;padding:0.7rem 1.5rem;">Take the Assessment →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section">
+    <div class="section-inner">
+      <div class="section-label">What Leaders Say</div>
+      <h2 style="color:rgba(248,243,234,0.9);">Real results from<br/><em>real leaders.</em></h2>
+      <div class="testimonials-grid">
+        <div class="testimonial reveal">
+          <p class="testimonial-quote">"I've done Myers-Briggs twice and DiSC three times. This is the first assessment that didn't just tell me who I am — it told me exactly what to do about it."</p>
+          <div class="testimonial-author"><strong>Sarah M.</strong>VP of Product · Series B Startup</div>
+        </div>
+        <div class="testimonial reveal" style="transition-delay:0.1s">
+          <p class="testimonial-quote">"The coaching prompts tab alone was worth an hour of honest reflection. I went straight from the results into a conversation with my coach that felt completely different."</p>
+          <div class="testimonial-author"><strong>James O.</strong>Director of Engineering · Fintech</div>
+        </div>
+        <div class="testimonial reveal" style="transition-delay:0.2s">
+          <p class="testimonial-quote">"My score on Agreeableness explained three years of feedback I'd never fully understood. The Courageous Accountability program gave me a framework I use every single week."</p>
+          <div class="testimonial-author"><strong>Amara N.</strong>Country Manager · NGO Sector</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="section-inner" style="text-align:center;">
+      <div class="section-label reveal">Get Started</div>
+      <h2 class="reveal" style="margin:0 auto 1.2rem;">Your leadership<br/><em>blueprint</em> awaits.</h2>
+      <p class="section-body reveal" style="margin:0 auto 2.5rem;text-align:center;">Free. No signup required. Takes 10 minutes. Results stay with you.</p>
+      <a href="tool.html" class="btn-primary reveal" style="font-size:0.9rem;padding:1rem 2.5rem;">Begin the Assessment →</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Leader<span>DNA</span></div>
+    <ul class="footer-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="tool.html">Assessment</a></li>
+    </ul>
+    <div class="footer-copy">© 2025 LeaderDNA. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
